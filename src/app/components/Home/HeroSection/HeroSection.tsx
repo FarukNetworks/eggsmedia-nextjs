@@ -1,3 +1,5 @@
+'use client';
+
 import './HeroSection.css';
 import Button from '../../Parts/Button';
 import L1 from './svg/L1.svg';
@@ -11,20 +13,17 @@ import L3 from './svg/L3.svg';
 import Image from 'next/image';
 import { useState, useRef } from 'react';
 
-export default function HeroSection() {
+export default function HeroSection(props: {
+  heading: string;
+  editor: string;
+  gifUrl: string;
+  imageUrl: string;
+  imageAlt: string;
+  imageWidth: number;
+  imageHeight: number;
+}) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  const heading = 'Balancing Creativity and Strategy';
-  const editor =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-  const gifUrl =
-    'https://eggsmedia.com/wp-content/uploads/2025/03/Eggs-Website-GIF.gif';
-  const imageUrl =
-    'https://eggsmedia.com/wp-content/uploads/2024/11/eggsmedia-hero-image.png';
-  const imageAlt = 'Hero Section Image';
-  const imageWidth = 1000;
-  const imageHeight = 1000;
 
   const handlePortfolioHighlightsClick = () => {
     setIsVideoModalOpen(true);
@@ -50,13 +49,13 @@ export default function HeroSection() {
             <div className="container lg:col-span-2 flex items-center relative -top-14 !max-w-[1400px] max-lg:mb-40">
               <div className="lg:pl-32">
                 <h1 className="base96 max-sm:pb-5 pb-10 customTitleAnimation withSpan relative inline-block leading-[.8]">
-                  {heading}
+                  {props.heading}
 
-                  <div className="absolute top-0 bg-gradient-to-r from-primary to-secondary h-full customGradientBgAnimation"></div>
+                  <div className="absolute top-0 bg-gradient-to-r from-[#D883BB] to-[#5BC5CE] h-full customGradientBgAnimation"></div>
                 </h1>
 
                 <div className="max-sm:text-[18px] text-[24px] leading-[1.15] gsap-animated gsap-fade-in-up gsap-delay-hero max-w-[600px] mb-10">
-                  {editor}
+                  {props.editor}
                 </div>
 
                 <div className="gsap-animated gsap-fade-in-up-hero block">
@@ -125,7 +124,7 @@ export default function HeroSection() {
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[105px] h-[105px] rounded-full object-cover baseTransition group-hover:w-[170px] group-hover:h-[170px] -z-10 overflow-hidden block">
                           <Image
                             className="rounded-full object-cover object-center baseTransition h-full"
-                            src={gifUrl}
+                            src={props.gifUrl}
                             alt="Eggsmedia"
                             width="267"
                             height="150"
@@ -188,10 +187,10 @@ export default function HeroSection() {
 
                   <Image
                     className="gsap-animated gsap-fade-in-hero max-sm:h-[300px] max-sm:w-auto max-sm:hidden max-sm:mx-auto"
-                    src={imageUrl}
-                    alt={imageAlt}
-                    width={imageWidth}
-                    height={imageHeight}
+                    src={props.imageUrl}
+                    alt={props.imageAlt}
+                    width={props.imageWidth}
+                    height={props.imageHeight}
                     fetchPriority="high"
                     loading="eager"
                   />

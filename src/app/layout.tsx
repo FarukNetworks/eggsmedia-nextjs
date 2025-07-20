@@ -3,6 +3,7 @@ import { DM_Sans } from 'next/font/google';
 import './globals.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import GSAPProvider from './components/GSAPProvider';
 
 const dmSans = DM_Sans({
   variable: '--font-dm-sans',
@@ -22,17 +23,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dmSans.variable} font-sans antialiased relative`}>
-        {/* Dashed lines */}
-        <div className="w-full h-full absolute left-0 top-0 z-0 max-sm:hidden pointer-events-none">
-          <div className="dashed-line"></div>
-          <div className="dashed-line"></div>
-        </div>
+        <GSAPProvider>
+          {/* Dashed lines */}
+          <div className="w-full h-full absolute left-0 top-0 z-0 max-sm:hidden pointer-events-none">
+            <div className="dashed-line"></div>
+            <div className="dashed-line"></div>
+          </div>
 
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <div className="flex-1">{children}</div>
-          <Footer />
-        </div>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <div className="flex-1">{children}</div>
+            <Footer />
+          </div>
+        </GSAPProvider>
       </body>
     </html>
   );
