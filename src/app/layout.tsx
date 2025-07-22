@@ -22,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} font-sans antialiased relative`}>
+      <body
+        className={`${dmSans.variable} font-sans antialiased relative overflow-x-hidden`}
+      >
         <GSAPProvider>
           {/* Dashed lines */}
           <div className="w-full h-full absolute left-0 top-0 z-0 max-sm:hidden pointer-events-none">

@@ -11,7 +11,7 @@ import R5 from './svg/R5.svg';
 import R6 from './svg/R6.svg';
 import L3 from './svg/L3.svg';
 import Image from 'next/image';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function HeroSection(props: {
   heading: string;
@@ -39,6 +39,31 @@ export default function HeroSection(props: {
     }
   };
 
+  useEffect(() => {
+    const heroObjects = document.querySelectorAll('.heroObject');
+
+    heroObjects.forEach((el: Element, index: number) => {
+      const htmlElement = el as HTMLElement;
+
+      setTimeout(function () {
+        setTimeout(function () {
+          htmlElement.classList.remove('opacity-0');
+        }, Number(`${index}99`));
+      }, 1400);
+
+      htmlElement.addEventListener('mousemove', function (e: MouseEvent) {
+        const rect = htmlElement.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        htmlElement.style.transform = `translate(${x}px, ${y}px)`;
+      });
+
+      setInterval(() => {
+        htmlElement.style.transform = `rotate(${Math.random() * 360}deg)`;
+      }, 3000 * (index + 1)); // Rotate each element after 1 second, but each different one after 1 second
+    });
+  }, []);
+
   return (
     <>
       <section id="slider" className="relative z-10 mb-10">
@@ -49,7 +74,9 @@ export default function HeroSection(props: {
             <div className="container lg:col-span-2 flex items-center relative -top-14 !max-w-[1400px] max-lg:mb-40">
               <div className="lg:pl-32">
                 <h1 className="base96 max-sm:pb-5 pb-10 customTitleAnimation withSpan relative inline-block leading-[.8]">
-                  {props.heading}
+                  <div
+                    dangerouslySetInnerHTML={{ __html: props.heading }}
+                  ></div>
 
                   <div className="absolute top-0 bg-gradient-to-r from-[#D883BB] to-[#5BC5CE] h-full customGradientBgAnimation"></div>
                 </h1>
@@ -123,6 +150,8 @@ export default function HeroSection(props: {
 
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[105px] h-[105px] rounded-full object-cover baseTransition group-hover:w-[170px] group-hover:h-[170px] -z-10 overflow-hidden block">
                           <Image
+                            priority={true}
+                            loading="eager"
                             className="rounded-full object-cover object-center baseTransition h-full"
                             src={props.gifUrl}
                             alt="Eggsmedia"
@@ -150,39 +179,39 @@ export default function HeroSection(props: {
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute -left-3 top-20 -z-10 max-sm:top-10">
-                    <L1 />
+                    <L1 className="w-[80px] h-[80px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute -right-24 top-5 max-sm:-top-5">
-                    <R1 />
+                    <R1 className="w-[175px] h-[175px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute right-14 max-sm:right-6 top-[34%] -z-10">
-                    <R2 />
+                    <R2 className="w-[60px] h-[60px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute -right-16 max-sm:-right-10 top-[39%]">
-                    <Group1 />
+                    <Group1 className="w-[100px] h-[100px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute -left-10 top-[50%]">
-                    <L2 />
+                    <L2 className="w-[100px] h-[100px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute -right-8 max-sm:top-[60%] top-[55%]">
-                    <R5 />
+                    <R5 className="w-[100px] h-[100px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute right-0 top-[78%]">
-                    <R6 />
+                    <R6 className="w-[100px] h-[100px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute left-10 top-[74%] max-sm:top-[80%]">
-                    <L3 />
+                    <L3 className="w-[85px] h-[85px]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute left-10 top-[calc(74%+80px)] max-sm:top-[calc(66%+80px)]">
-                    <L3 />
+                    <L3 className="w-[85px] h-[85px]" />
                   </div>
 
                   <Image
