@@ -2,20 +2,24 @@
 
 import './HeroSection.css';
 import Button from '../../Parts/Button';
-import L1 from './svg/L1.svg';
-import R1 from './svg/R1.svg';
-import R2 from './svg/R2.svg';
 import Group1 from './svg/Group 1.svg';
 import L2 from './svg/L2.svg';
 import R5 from './svg/R5.svg';
 import R6 from './svg/R6.svg';
 import L3 from './svg/L3.svg';
 import Image from 'next/image';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+
+// Define the button interface to match the updated structure
+interface ButtonData {
+  title: string;
+  url: string;
+}
 
 export default function HeroSection(props: {
   heading: string;
   editor: string;
+  button: ButtonData;
   gifUrl: string;
   imageUrl: string;
   imageAlt: string;
@@ -23,7 +27,9 @@ export default function HeroSection(props: {
   imageHeight: number;
 }) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [titleAnimationPhase, setTitleAnimationPhase] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   const handlePortfolioHighlightsClick = () => {
     setIsVideoModalOpen(true);
@@ -39,7 +45,124 @@ export default function HeroSection(props: {
     }
   };
 
+  // Dynamic styles for title animation
+  const getTitleStyles = () => {
+    switch (titleAnimationPhase) {
+      case 1:
+      case 2:
+        return {
+          color: 'transparent',
+        };
+      case 3:
+      case 4:
+      case 5:
+      default:
+        return {
+          color: '#231f20',
+        };
+    }
+  };
+
+  const getGradientStyles = () => {
+    switch (titleAnimationPhase) {
+      case 1:
+        return {
+          width: '0%',
+          left: '0',
+          right: 'unset',
+        };
+      case 2:
+        return {
+          width: '100%',
+          left: '0',
+          right: 'unset',
+          transition: 'width 0.6s ease-out',
+        };
+      case 3:
+        return {
+          width: '100%',
+          left: '0',
+          right: 'unset',
+        };
+      case 4:
+        return {
+          width: '0%',
+          left: 'unset',
+          right: '0',
+          transition: 'width 0.6s ease-out',
+        };
+      case 5:
+      default:
+        return {
+          width: '0%',
+          left: 'unset',
+          right: '0',
+        };
+    }
+  };
+
+  const getSpanStyles = useCallback(() => {
+    switch (titleAnimationPhase) {
+      case 3:
+      case 4:
+      case 5:
+        return {
+          background: 'linear-gradient(90deg, #d883bb 0%, #5bc5ce 100%)',
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+        };
+      default:
+        return {
+          background: 'transparent',
+          color: 'inherit',
+        };
+    }
+  }, [titleAnimationPhase]);
+
+  // Apply span styles when animation phase changes
   useEffect(() => {
+    if (headingRef.current) {
+      const spans = headingRef.current.querySelectorAll('span');
+      const spanStyles = getSpanStyles();
+
+      spans.forEach(span => {
+        const htmlSpan = span as HTMLElement;
+        Object.assign(htmlSpan.style, spanStyles);
+      });
+    }
+  }, [titleAnimationPhase, getSpanStyles]);
+
+  useEffect(() => {
+    // Title animation sequence matching GSAP timeline exactly
+    const runTitleAnimation = () => {
+      // Phase 1: Start - gradient width 0, text transparent
+      setTitleAnimationPhase(1);
+
+      // Phase 2: Gradient expands to 100% over 600ms
+      setTimeout(() => {
+        setTitleAnimationPhase(2);
+      }, 50); // Small delay to ensure initial state is rendered
+
+      // Phase 3: At 600ms - text color changes instantly, span gets gradient
+      setTimeout(() => {
+        setTitleAnimationPhase(3);
+      }, 650);
+
+      // Phase 4: At 650ms - gradient starts collapsing from left to right over 600ms
+      setTimeout(() => {
+        setTitleAnimationPhase(4);
+      }, 700);
+
+      // Phase 5: Animation complete
+      setTimeout(() => {
+        setTitleAnimationPhase(5);
+      }, 1300);
+    };
+
+    // Start title animation after component mounts
+    runTitleAnimation();
+
     const heroObjects = document.querySelectorAll('.heroObject');
 
     heroObjects.forEach((el: Element, index: number) => {
@@ -66,19 +189,26 @@ export default function HeroSection(props: {
 
   return (
     <>
-      <section id="slider" className="relative z-10 mb-10">
+      <section id="slider" className="relative z-10 mb-10 mt-[110px]">
         <div className="min-h-[calc(100vh-110px)] flex items-center max-lg:pt-24 max-sm:pt-8 max-sm:pb-0">
           <div className="grid grid-cols-1 gap-x-5 lg:grid-cols-3 relative w-full">
             <div className="max-lg:hidden gsap-animated gsap-fade-in-hero absolute left-0 top-[calc(50%-3.5rem)] -translate-y-1/2 bg-[#F8F8F8] w-full h-[65vh] -z-20"></div>
 
             <div className="container lg:col-span-2 flex items-center relative -top-14 !max-w-[1400px] max-lg:mb-40">
               <div className="lg:pl-32">
-                <h1 className="base96 max-sm:pb-5 pb-10 customTitleAnimation withSpan relative inline-block leading-[.8]">
+                <h1
+                  ref={headingRef}
+                  className="base96 max-sm:pb-5 pb-10 relative inline-block leading-[.8]"
+                  style={getTitleStyles()}
+                >
                   <div
                     dangerouslySetInnerHTML={{ __html: props.heading }}
                   ></div>
 
-                  <div className="absolute top-0 bg-gradient-to-r from-[#D883BB] to-[#5BC5CE] h-full customGradientBgAnimation"></div>
+                  <div
+                    className="absolute top-0 bg-gradient-to-r from-[#D883BB] to-[#5BC5CE] h-full"
+                    style={getGradientStyles()}
+                  ></div>
                 </h1>
 
                 <div className="max-sm:text-[18px] text-[24px] leading-[1.15] gsap-animated gsap-fade-in-up gsap-delay-hero max-w-[600px] mb-10">
@@ -86,7 +216,11 @@ export default function HeroSection(props: {
                 </div>
 
                 <div className="gsap-animated gsap-fade-in-up-hero block">
-                  <Button></Button>
+                  <Button
+                    title={props.button.title}
+                    url={props.button.url}
+                    target="_self"
+                  />
                 </div>
               </div>
             </div>
@@ -178,20 +312,20 @@ export default function HeroSection(props: {
                     </div>
                   </div>
 
-                  <div className="heroObject baseTransition opacity-0 absolute -left-3 top-20 -z-10 max-sm:top-10">
+                  {/* <div className="heroObject baseTransition opacity-0 absolute -left-3 top-20 -z-10 max-sm:top-10">
                     <L1 className="w-[80px] h-[80px]" />
-                  </div>
+                  </div> */}
 
-                  <div className="heroObject baseTransition opacity-0 absolute -right-24 top-5 max-sm:-top-5">
+                  {/* <div className="heroObject baseTransition opacity-0 absolute -right-24 top-5 max-sm:-top-5">
                     <R1 className="w-[175px] h-[175px]" />
-                  </div>
+                  </div> */}
 
-                  <div className="heroObject baseTransition opacity-0 absolute right-14 max-sm:right-6 top-[34%] -z-10">
+                  {/* <div className="heroObject baseTransition opacity-0 absolute right-14 max-sm:right-6 top-[34%] -z-10">
                     <R2 className="w-[60px] h-[60px]" />
-                  </div>
+                  </div> */}
 
                   <div className="heroObject baseTransition opacity-0 absolute -right-16 max-sm:-right-10 top-[39%]">
-                    <Group1 className="w-[100px] h-[100px]" />
+                    <Group1 className="scale-[.6]" />
                   </div>
 
                   <div className="heroObject baseTransition opacity-0 absolute -left-10 top-[50%]">
@@ -243,7 +377,7 @@ export default function HeroSection(props: {
           <button
             id="closePortfolioHighlightsVideo"
             onClick={handleCloseVideo}
-            className="absolute -top-12 right-0 text-white text-2xl hover:text-gray-300 transition-colors z-10"
+            className="fixed top-10 right-1/2 translate-x-1/2 bg-primary w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl z-50 cursor-pointer baseTransition hover:bg-secondary"
             aria-label="Close video"
           >
             <svg
@@ -263,12 +397,12 @@ export default function HeroSection(props: {
 
           <video
             ref={videoRef}
-            className="w-full h-auto rounded-lg shadow-lg"
+            className="fixed inset-0 w-full h-auto rounded-lg shadow-lg"
             controls
             preload="metadata"
           >
             <source
-              src="https://eggsmedia.com/wp-content/uploads/2025/03/portfolio-highlights.mp4"
+              src="https://eggsmedia.com/wp-content/uploads/2025/03/eggs-media-video-portfolio-reel.webm"
               type="video/mp4"
             />
             Your browser does not support the video tag.

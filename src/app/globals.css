@@ -1,5 +1,16 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-primary: #d883bb;
+  --color-secondary: #5bc5ce;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-orange: #fd9834;
+  --color-gray: #f8f8f8;
+  --color-darkPurple: #ad6996;
+  --color-borderColor: #bdbdbd;
+}
+
 :root {
   --containerPadding: 50px;
   --primary: #d883bb;
@@ -431,10 +442,6 @@ header.stickNav > div {
   font-weight: 600 !important;
 }
 
-.customTitleAnimation {
-  color: transparent;
-}
-
 .gsapReveal {
   opacity: 0;
   transform: translateY(100px);
@@ -546,10 +553,6 @@ header.stickNav > div {
   100% {
     transform: translateY(3px);
   }
-}
-
-.withSpan span {
-  background: transparent;
 }
 
 .flexibleLineHeading {
@@ -1674,4 +1677,8 @@ button.quform-submit:hover *,
   .flex.justify-between.items-center.gsap-animated.gsap-fade-in-up
   img {
   max-width: 160px;
+}
+
+.withSpan span {
+  background: transparent;
 }

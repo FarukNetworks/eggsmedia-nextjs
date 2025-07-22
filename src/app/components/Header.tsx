@@ -1,41 +1,42 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function Header() {
+interface HeaderProps {
+  whiteLogo?: boolean;
+}
+
+export default function Header({ whiteLogo = false }: HeaderProps) {
   return (
     <header>
-      <div
-        className="baseTransition mx-auto grid place-items-center fixed z-[99] top-0 left-0 bg-transparent w-full <?php if (is_admin_bar_showing()):
-                                                                                                                        echo 'adminFixedHeader';
-                                                                                                                      else:
-                                                                                                                        'top-0';
-                                                                                                                      endif ?>"
-      >
+      <div className="baseTransition mx-auto grid place-items-center fixed z-[99] top-0 left-0 bg-transparent w-full">
         <div className="md:flex md:justify-between md:items-center py-6 w-full max-w-[2250px] px-[var(--containerPadding)]">
           <div className="flex justify-between items-center w-full">
-            <div id="logo" className="relative z-40">
+            <div id="logo" className="relative z-40 min-w-[117px]">
               <Link
-                id="white-logo"
-                className="custom-logo-link absolute inset-0 invisible baseTransition"
+                className="custom-logo-link absolute inset-0 baseTransition"
                 href="/"
                 rel="home"
               >
-                <Image
-                  width="117"
-                  height="32"
-                  src="https://eggsmedia.com/wp-content/uploads/2025/06/eggsmedia-logo-black-font.png"
-                  className="custom-logo"
-                  alt="Eggs Media Logo"
-                  decoding="async"
-                />
+                {whiteLogo ? (
+                  <Image
+                    width="117"
+                    height="32"
+                    src="https://eggsmedia.com/wp-content/uploads/2025/06/eggsmedia-logo-white.png"
+                    className="custom-logo"
+                    alt="Eggs Media Logo"
+                    decoding="async"
+                  />
+                ) : (
+                  <Image
+                    width="117"
+                    height="32"
+                    src="https://eggsmedia.com/wp-content/uploads/2025/06/eggsmedia-logo-black-font.png"
+                    className="custom-logo"
+                    alt="Eggs Media Logo"
+                    decoding="async"
+                  />
+                )}
               </Link>
-
-              <Link
-                href="/"
-                className="font-extrabold text-lg uppercase"
-              ></Link>
-
-              <p className="text-sm font-light text-gray-600"></p>
             </div>
 
             <div className="relative z-40 flex gap-12">

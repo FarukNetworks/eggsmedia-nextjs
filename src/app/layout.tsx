@@ -33,7 +33,7 @@ export default function RootLayout({
           </div>
 
           <div className="min-h-screen flex flex-col">
-            <Header />
+            <Header whiteLogo={false} />
             <div className="flex-1">{children}</div>
             <Footer />
           </div>

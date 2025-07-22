@@ -258,52 +258,6 @@ export const useGSAP = (options: UseGSAPOptions = {}) => {
       });
     };
 
-    const initializeHeroAnimations = () => {
-      // Hero timeline
-      const tl = gsap.timeline();
-
-      const gradientBg = document.querySelector('.customGradientBgAnimation');
-      if (gradientBg) {
-        tl.from(gradientBg, {
-          width: '0',
-          left: '0',
-        })
-          .to(gradientBg, {
-            width: '100%',
-            duration: 0.6,
-          })
-          .to('.customTitleAnimation', {
-            color: '#231f20',
-            duration: 0,
-          });
-
-        const withSpan = document.querySelector('.withSpan span');
-        if (withSpan) {
-          tl.to(withSpan, {
-            background:
-              'linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%)',
-            duration: 0,
-          });
-        }
-
-        tl.to(gradientBg, {
-          width: '0%',
-          left: 'unset',
-          right: '0',
-          duration: 0.6,
-        });
-
-        const gsapReveal = document.querySelector('.gsapReveal');
-        if (gsapReveal) {
-          tl.to(gsapReveal, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-          });
-        }
-      }
-    };
-
     const initializeSpecializedAnimations = () => {
       // Date columns
       document.querySelectorAll('.gsapDateJs').forEach(el => {
@@ -744,11 +698,6 @@ export const useGSAP = (options: UseGSAPOptions = {}) => {
 
       // Text reveal animations
       initializeTextAnimations();
-
-      // Hero specific animations
-      setTimeout(() => {
-        initializeHeroAnimations();
-      }, 0);
 
       // Other specialized animations
       initializeSpecializedAnimations();

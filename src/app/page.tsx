@@ -1,8 +1,15 @@
 import HeroSection from './components/Home/HeroSection/HeroSection';
 
+// Define the button interface to match WordPress ACF structure
+interface ButtonData {
+  title: string;
+  url: string;
+}
+
 interface HeroSectionData {
   heading: string;
   editor: string;
+  button: ButtonData;
   gifUrl: string;
   imageUrl: string;
   imageAlt: string;
@@ -22,6 +29,7 @@ interface WordPressImageData {
 interface WordPressPageContent {
   heading: string;
   editor: string;
+  button: ButtonData;
   image: string;
 }
 
@@ -62,10 +70,13 @@ export default async function Home() {
       // Fetch image data
       const imageData = await fetchImageData(homepageContent.image);
 
+      console.log(homepageContent.button);
+
       // Build hero section data
       const heroData: HeroSectionData = {
         heading: homepageContent.heading,
         editor: homepageContent.editor,
+        button: homepageContent.button,
         gifUrl:
           'https://eggsmedia.com/wp-content/uploads/2025/03/Eggs-Website-GIF.gif',
         imageUrl: imageData.source_url,
@@ -88,6 +99,10 @@ export default async function Home() {
   const defaultHeroData: HeroSectionData = {
     heading: 'Welcome to Eggs Media',
     editor: 'We create amazing digital experiences',
+    button: {
+      title: 'Contact Us',
+      url: '/contact',
+    },
     gifUrl:
       'https://eggsmedia.com/wp-content/uploads/2025/03/Eggs-Website-GIF.gif',
     imageUrl: '',
@@ -103,6 +118,7 @@ export default async function Home() {
       <HeroSection
         heading={finalHeroData.heading}
         editor={finalHeroData.editor}
+        button={finalHeroData.button}
         gifUrl={finalHeroData.gifUrl}
         imageUrl={finalHeroData.imageUrl}
         imageAlt={finalHeroData.imageAlt}
